@@ -5,11 +5,10 @@ import com.dsinnovators.blog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class CategoryController {
@@ -36,6 +35,31 @@ public class CategoryController {
     @PostMapping("/category/create")
     public String create(@ModelAttribute Category category) {
         categoryService.save(category);
+
+        return "redirect:/categories";
+    }
+
+    @GetMapping("/category/{id}/update")
+    public String update(@PathVariable Long id, Model model) {
+        Optional<Category> category = categoryService.findById(id);
+
+        if (category.isPresent()) {
+            model.addAttribute("category", category.get());
+        }
+
+        return "category/update";
+    }
+
+    @PostMapping("/category/{id}/update")
+    public String update(@PathVariable Long id, @ModelAttribute Category category) {
+        categoryService.update(category, id);
+
+        return "redirect:/categories";
+    }
+
+    @PostMapping("/category/{id}/delete")
+    public String delete(@PathVariable Long id) {
+        categoryService.delete(id);
 
         return "redirect:/categories";
     }

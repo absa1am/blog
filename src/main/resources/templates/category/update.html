@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Update Category - Blog</title>
+        <link rel="stylesheet" th:href="@{/assets/css/styles.css}">
+        <link rel="canonical" th:href="@{https://getbootstrap.com/docs/5.3/examples/navbar-static/}">
+        <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/@docsearch/css@3}">
+        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="layouts/navbar :: nav"></div>
+
+        <main class="container">
+            <div class="bg-body-tertiary p-5 rounded">
+                <h1>Create Category</h1>
+                <form th:action="@{/category/{id}/update(id=${category.id})}" th:object="${category}" th:method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Category Name</label>
+                        <input type="text" th:field="*{name}" class="form-control" id="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Category Description</label>
+                        <textarea th:field="*{description}" class="form-control" id="description"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </main>
+
+        <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    </body>
+</html>

@@ -30,9 +30,8 @@
                             <td th:text="${category.name}"></td>
                             <td th:text="${category.description}"></td>
                             <td>
-                                <a href="#"><i class="bi bi-pencil-square"></i></a>
-                                <a href="#"><i class="bi bi-eye"></i></a>
-                                <a href="#"><i class="bi bi-trash"></i></a>
+                                <a th:href="@{/category/{id}/update(id=${category.id})}"><i class="bi bi-pencil-square"></i></a>
+                                <a th:href="@{/category/{id}/delete(id=${category.id})}"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
                     </tbody>
