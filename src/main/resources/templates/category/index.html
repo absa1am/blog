@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Categories - Blog</title>
+        <link rel="stylesheet" th:href="@{/assets/css/styles.css}">
+        <link rel="canonical" th:href="@{https://getbootstrap.com/docs/5.3/examples/navbar-static/}">
+        <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/@docsearch/css@3}">
+        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="layouts/navbar :: nav"></div>
+
+        <main class="container">
+            <div class="bg-body-tertiary p-5 rounded">
+                <h1>Categories</h1>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="category : ${categories}">
+                            <td th:text="${category.id}"></td>
+                            <td th:text="${category.name}"></td>
+                            <td th:text="${category.description}"></td>
+                            <td>Edit View Delete</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    </body>
+</html>
