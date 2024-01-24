@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Posts - Blog</title>
+        <link rel="stylesheet" th:href="@{/assets/css/styles.css}">
+        <link rel="canonical" th:href="@{https://getbootstrap.com/docs/5.3/examples/navbar-static/}">
+        <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/@docsearch/css@3}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="layouts/navbar :: nav"></div>
+
+        <main class="container">
+            <div class="bg-body-tertiary p-5 rounded">
+                <h1>Posts</h1>
+                <table id="categories" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="post : ${posts}">
+                            <td th:text="${post.id}"></td>
+                            <td th:text="${post.title}"></td>
+                            <td th:text="${post.category.name}"></td>
+                            <td>
+                                <a th:href="@{/post/{id}/update(id=${post.id})}"><i class="bi bi-pencil-square"></i></a>
+                                <a href="#"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    </body>
+</html>
