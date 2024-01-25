@@ -4,7 +4,6 @@ import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.models.Post;
 import com.dsinnovators.blog.services.CategoryService;
 import com.dsinnovators.blog.services.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +16,13 @@ import java.util.List;
 @Controller
 public class PostController {
 
-    @Autowired
     private PostService postService;
-    @Autowired
     private CategoryService categoryService;
+
+    public PostController(PostService postService, CategoryService categoryService) {
+        this.postService = postService;
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/posts")
     public String index(Model model) {
