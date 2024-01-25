@@ -31,7 +31,7 @@
                             <td th:text="${category.description}"></td>
                             <td>
                                 <a th:href="@{/category/{id}/update(id=${category.id})}"><i class="bi bi-pencil-square"></i></a>
-                                <a href="#" onclick="deleteCategoryRow(this)" th:data-category-id="${category.id}"><i class="bi bi-trash"></i></a>
+                                <a href="#" onclick="deleteTableRow(this)" th:data-route-param="category" th:data-row-id="${category.id}"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
                     </tbody>
@@ -40,28 +40,6 @@
         </main>
 
         <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
-
-        <script>
-            
-            function deleteCategoryRow(data) {
-                const trTag = data.parentNode.parentNode;
-                const id = data.getAttribute('data-category-id');
-                const url = "/category/" + id + "/delete";
-
-                let xmlHttpRequest = new XMLHttpRequest();
-
-                xmlHttpRequest.onreadystatechange = function () {
-                    if (xmlHttpRequest.readyState == xmlHttpRequest.DONE && xmlHttpRequest.status == 200) {
-                        const tbodyTag = trTag.parentNode;
-
-                        tbodyTag.removeChild(trTag);
-                    }
-                };
-
-                xmlHttpRequest.open("POST", url);
-                xmlHttpRequest.send();
-            }
-
-        </script>
+        <script th:src="@{/assets/js/deleteRow.js}"></script>
     </body>
 </html>
