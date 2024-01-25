@@ -2,7 +2,6 @@ package com.dsinnovators.blog.controllers;
 
 import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.services.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.Optional;
 @Controller
 public class CategoryController {
 
-    @Autowired
     private CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/categories")
     public String index(Model model) {

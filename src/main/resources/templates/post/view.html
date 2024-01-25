@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Post - Blog</title>
+        <link rel="stylesheet" th:href="@{/assets/css/styles.css}">
+        <link rel="canonical" th:href="@{https://getbootstrap.com/docs/5.3/examples/navbar-static/}">
+        <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/@docsearch/css@3}">
+        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    </head>
+    <body>
+        <div th:replace="layouts/navbar :: nav"></div>
+
+        <main class="container">
+            <div class="bg-body-tertiary p-5 rounded">
+                <h1 th:text="${post.title}"></h1>
+                <div class="clearfix">
+                    <img th:src="@{/assets/img/library.jpg}" class="col-md-6 float-md-end mb-3 ms-md-3" alt="Post Image">
+
+                    <p th:text="${post.description}"></p>
+                </div>
+            </div>
+        </main>
+
+        <script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+    </body>
+</html>
