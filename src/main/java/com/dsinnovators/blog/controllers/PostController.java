@@ -31,6 +31,15 @@ public class PostController {
         return "post/index";
     }
 
+    @GetMapping("/post/{id}/view")
+    public String view(Model model, @PathVariable Long id) {
+        Post post = postService.find(id);
+
+        model.addAttribute("post", post);
+
+        return "post/view";
+    }
+
     @GetMapping("/post/create")
     public String create(Model model) {
         List<Category> categories = categoryService.getAll();
@@ -45,7 +54,7 @@ public class PostController {
     public String create(@ModelAttribute Post post) {
         postService.save(post);
 
-        return "redirect:/post/create";
+        return "redirect:/posts";
     }
 
     @GetMapping("/post/{id}/update")

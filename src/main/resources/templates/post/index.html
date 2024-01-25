@@ -31,6 +31,7 @@
                             <td th:text="${post.category.name}"></td>
                             <td>
                                 <a th:href="@{/post/{id}/update(id=${post.id})}"><i class="bi bi-pencil-square"></i></a>
+                                <a th:href="@{/post/{id}/view(id=${post.id})}"><i class="bi bi-eye"></i></a>
                                 <a href="#" onclick="deleteTableRow(this)" th:data-route-param="post" th:data-row-id="${post.id}"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
