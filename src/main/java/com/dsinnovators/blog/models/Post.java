@@ -2,19 +2,19 @@ package com.dsinnovators.blog.models;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "posts")
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posts_seq")
-    @SequenceGenerator(name = "posts_seq", sequenceName = "posts_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posts_id_seq")
+    @SequenceGenerator(name = "posts_id_seq", sequenceName = "posts_id_seq", allocationSize = 1)
     private Long id;
     private String title;
     private String description;
     private String image;
+    @ManyToOne
+    private User user;
     @ManyToOne
     private Category category;
 
@@ -49,6 +49,10 @@ public class Post {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public void setUser(User user) { this.user = user; }
+
+    public User getUser() { return user; }
 
     public Category getCategory() {
         return category;
