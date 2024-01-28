@@ -14,14 +14,14 @@
         <main class="container">
             <div class="bg-body-tertiary p-5 rounded">
                 <h1>Login</h1>
-                <form th:action="@{/login}" th:method="post">
+                <form th:action="@{/login}" th:object="${user}" th:method="post">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" th:name="email" class="form-control" id="email">
+                        <input type="email" th:field="*{email}" class="form-control" id="email">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" th:name="password" class="form-control" id="password">
+                        <input type="password" th:field="*{password}" class="form-control" id="password">
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>

@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
@@ -51,13 +50,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        User user = userService.findByEmail(email);
+    public String login(@ModelAttribute User user, HttpSession session) {
+        User existingUser = userService.findByEmail(user.getEmail());
 
-        if (user != null && password.equals(user.getPassword())) {
+        if (existingUser != null && existingUser.getPassword().equals(user.getPassword())) {
             session.setAttribute("user", user.getEmail());
-
-            System.out.println("Email: " + email + ", Password: " + user.getPassword());
 
             return "redirect:/";
         }
