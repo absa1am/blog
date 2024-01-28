@@ -2,6 +2,7 @@ package com.dsinnovators.blog.controllers;
 
 import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.services.CategoryService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,11 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public String index(Model model) {
+    public String index(Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
         List<Category> categories = categoryService.getAll();
 
         model.addAttribute("categories", categories);
@@ -28,7 +33,11 @@ public class CategoryController {
     }
 
     @GetMapping("/category/create")
-    public String create(Model model) {
+    public String create(Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
         model.addAttribute("category", new Category());
 
         return "category/create";
@@ -42,7 +51,11 @@ public class CategoryController {
     }
 
     @GetMapping("/category/{id}/update")
-    public String update(@PathVariable Long id, Model model) {
+    public String update(@PathVariable Long id, Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
         Optional<Category> category = categoryService.findById(id);
 
         if (category.isPresent()) {

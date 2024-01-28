@@ -2,8 +2,11 @@ package com.dsinnovators.blog.controllers;
 
 import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.models.Post;
+import com.dsinnovators.blog.models.User;
 import com.dsinnovators.blog.services.CategoryService;
 import com.dsinnovators.blog.services.PostService;
+import com.dsinnovators.blog.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +21,29 @@ public class PostController {
 
     private PostService postService;
     private CategoryService categoryService;
+    private UserService userService;
 
-    public PostController(PostService postService, CategoryService categoryService) {
+    public PostController(PostService postService, CategoryService categoryService, UserService userService) {
         this.postService = postService;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     @GetMapping("/posts")
     public String index(Model model) {
+        List<Post> posts = postService.getAll();
+
+        model.addAttribute("posts", posts);
+
+        return "post/posts";
+    }
+
+    @GetMapping("/post/all")
+    public String posts(Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
         List<Post> posts = postService.getAll();
 
         model.addAttribute("posts", posts);
@@ -43,7 +61,11 @@ public class PostController {
     }
 
     @GetMapping("/post/create")
-    public String create(Model model) {
+    public String create(Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
         List<Category> categories = categoryService.getAll();
 
         model.addAttribute("post", new Post());
@@ -53,14 +75,23 @@ public class PostController {
     }
 
     @PostMapping("/post/create")
-    public String create(@ModelAttribute Post post) {
-        postService.save(post);
+    public String create(@ModelAttribute Post post, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        User user = userService.findByEmail(session.getAttribute("user").toString());
+        postService.save(post, user);
 
         return "redirect:/posts";
     }
 
     @GetMapping("/post/{id}/update")
-    public String update(Model model, @PathVariable Long id) {
+    public String update(Model model, @PathVariable Long id, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
         Post post = postService.find(id);
         List<Category> categories = categoryService.getAll();
 
@@ -76,7 +107,6 @@ public class PostController {
 
         return "redirect:/posts";
     }
-
 
     @PostMapping("/post/{id}/delete")
     public String delete(@PathVariable Long id) {

@@ -1,6 +1,7 @@
 package com.dsinnovators.blog.services;
 
 import com.dsinnovators.blog.models.Post;
+import com.dsinnovators.blog.models.User;
 import com.dsinnovators.blog.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,11 @@ import java.util.Optional;
 @Service
 public class PostService {
 
-    @Autowired
     private PostRepository postRepository;
+
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     public List<Post> getAll() {
         return postRepository.findAll();
@@ -22,7 +26,9 @@ public class PostService {
         return postRepository.findById(id).get();
     }
 
-    public Post save(Post post) {
+    public Post save(Post post, User user) {
+        post.setUser(user);
+
         return postRepository.save(post);
     }
 

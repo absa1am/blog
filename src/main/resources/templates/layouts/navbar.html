@@ -13,13 +13,27 @@
                     <a class="nav-link" th:href="@{/posts}">Posts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/post/create}">New Post</a>
+                    <a class="nav-link" th:if="${session.user} != null" th:href="@{/post/all}">All Post</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/categories}">Categories</a>
+                    <a class="nav-link" th:if="${session.user} != null" th:href="@{/post/create}">New Post</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/category/create}">New Category</a>
+                    <a class="nav-link" th:if="${session.user} != null" th:href="@{/categories}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user} != null" th:href="@{/category/create}">New Category</a>
+                </li>
+                <li class="nav-item" th:if="${session.user} == null">
+                    <a class="nav-link" th:href="@{/register}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user} == null" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item" th:if="${session.user} != null">
+                    <form th:action="@{/logout}" th:method="post">
+                        <button class="nav-link" type="submit">Logout</button>
+                    </form>
                 </li>
             </ul>
         </div>
