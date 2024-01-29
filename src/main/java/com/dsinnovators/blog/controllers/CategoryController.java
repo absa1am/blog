@@ -3,8 +3,10 @@ package com.dsinnovators.blog.controllers;
 import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.services.CategoryService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +46,11 @@ public class CategoryController {
     }
 
     @PostMapping("/category/create")
-    public String create(@ModelAttribute Category category) {
+    public String create(@Valid @ModelAttribute Category category, Errors errors) {
+        if (errors.hasErrors()) {
+            return "category/create";
+        }
+
         categoryService.save(category);
 
         return "redirect:/categories";
@@ -66,7 +72,11 @@ public class CategoryController {
     }
 
     @PostMapping("/category/{id}/update")
-    public String update(@PathVariable Long id, @ModelAttribute Category category) {
+    public String update(@PathVariable Long id, @Valid @ModelAttribute Category category, Errors errors) {
+        if (errors.hasErrors()) {
+            return "category/update";
+        }
+
         categoryService.update(category, id);
 
         return "redirect:/categories";
