@@ -18,10 +18,12 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Category Name</label>
                         <input type="text" th:field="*{name}" class="form-control" id="name">
+                        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Category Description</label>
                         <textarea th:field="*{description}" class="form-control" id="description"></textarea>
+                        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Create</button>
                 </form>

@@ -7,8 +7,10 @@ import com.dsinnovators.blog.services.CategoryService;
 import com.dsinnovators.blog.services.PostService;
 import com.dsinnovators.blog.services.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +24,13 @@ public class PostController {
     private PostService postService;
     private CategoryService categoryService;
     private UserService userService;
+    private HttpSession httpSession;
 
-    public PostController(PostService postService, CategoryService categoryService, UserService userService) {
+    public PostController(PostService postService, CategoryService categoryService, UserService userService, HttpSession httpSession) {
         this.postService = postService;
         this.categoryService = categoryService;
         this.userService = userService;
+        this.httpSession = httpSession;
     }
 
     @GetMapping("/posts")
@@ -39,8 +43,8 @@ public class PostController {
     }
 
     @GetMapping("/post/all")
-    public String posts(Model model, HttpSession session) {
-        if (session.getAttribute("user") == null) {
+    public String posts(Model model) {
+        if (httpSession.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
@@ -61,8 +65,8 @@ public class PostController {
     }
 
     @GetMapping("/post/create")
-    public String create(Model model, HttpSession session) {
-        if (session.getAttribute("user") == null) {
+    public String create(Model model) {
+        if (httpSession.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
@@ -75,20 +79,26 @@ public class PostController {
     }
 
     @PostMapping("/post/create")
-    public String create(@ModelAttribute Post post, HttpSession session) {
-        if (session.getAttribute("user") == null) {
+    public String create(@Valid @ModelAttribute Post post, Errors errors, Model model) {
+        if (errors.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAll());
+
+            return "post/create";
+        }
+
+        if (httpSession.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
-        User user = userService.findByEmail(session.getAttribute("user").toString());
+        User user = userService.findByEmail(httpSession.getAttribute("user").toString());
         postService.save(post, user);
 
         return "redirect:/posts";
     }
 
     @GetMapping("/post/{id}/update")
-    public String update(Model model, @PathVariable Long id, HttpSession session) {
-        if (session.getAttribute("user") == null) {
+    public String update(Model model, @PathVariable Long id) {
+        if (httpSession.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
@@ -102,7 +112,13 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/update")
-    public String update(@ModelAttribute Post post, @PathVariable Long id) {
+    public String update(@Valid @ModelAttribute Post post, Errors errors, Model model, @PathVariable Long id) {
+        if (errors.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAll());
+
+            return "post/update";
+        }
+
         postService.update(post, id);
 
         return "redirect:/posts";

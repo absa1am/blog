@@ -3,8 +3,10 @@ package com.dsinnovators.blog.controllers;
 import com.dsinnovators.blog.models.User;
 import com.dsinnovators.blog.services.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,14 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class UserController {
 
     private UserService userService;
+    private HttpSession httpSession;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, HttpSession httpSession) {
         this.userService = userService;
+        this.httpSession = httpSession;
     }
 
     @GetMapping("/register")
-    public String register(Model model, HttpSession session) {
-        if (session.getAttribute("user") != null) {
+    public String register(Model model) {
+        if (httpSession.getAttribute("user") != null) {
             return "redirect:/";
         }
 
@@ -30,17 +34,21 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user, HttpSession session) {
+    public String register(@Valid @ModelAttribute User user, Errors errors) {
+        if (errors.hasErrors()) {
+            return "user/register";
+        }
+
         userService.saveUser(user);
 
-        session.setAttribute("user", user.getEmail());
+        httpSession.setAttribute("user", user.getEmail());
 
         return "redirect:/";
     }
 
     @GetMapping("/login")
-    public String login(Model model, HttpSession session) {
-        if (session.getAttribute("user") != null) {
+    public String login(Model model) {
+        if (httpSession.getAttribute("user") != null) {
             return "redirect:/";
         }
 
@@ -50,11 +58,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute User user, HttpSession session) {
+    public String login(@Valid @ModelAttribute User user, Errors errors) {
+        if (errors.hasErrors()) {
+            return "user/login";
+        }
+
         User existingUser = userService.findByEmail(user.getEmail());
 
         if (existingUser != null && existingUser.getPassword().equals(user.getPassword())) {
-            session.setAttribute("user", user.getEmail());
+            httpSession.setAttribute("user", user.getEmail());
 
             return "redirect:/";
         }

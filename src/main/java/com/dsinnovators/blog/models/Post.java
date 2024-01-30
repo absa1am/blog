@@ -1,6 +1,14 @@
 package com.dsinnovators.blog.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "posts")
@@ -10,12 +18,15 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posts_id_seq")
     @SequenceGenerator(name = "posts_id_seq", sequenceName = "posts_id_seq", allocationSize = 1)
     private Long id;
+    @NotBlank(message = "Title can not be empty")
     private String title;
+    @NotBlank(message = "Description can not be empty")
     private String description;
     private String image;
     @ManyToOne
     private User user;
     @ManyToOne
+    @NotNull(message = "Category can not be empty")
     private Category category;
 
     public Long getId() {
