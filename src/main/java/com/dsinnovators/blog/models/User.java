@@ -1,6 +1,9 @@
 package com.dsinnovators.blog.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -11,7 +14,11 @@ public class User {
     @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
     private Long id;
     private String name;
+    @Email(message = "Email is not valid")
+    @NotBlank(message = "Email can not be empty")
     private String email;
+    @NotBlank(message = "Password can not be empty")
+    @Size(min = 6, message = "Password should be at least 6 characters long")
     private String password;
 
     public Long getId() {
