@@ -22,9 +22,12 @@ public class HomeControllerTest {
 
     @Test
     public void testHomePage() throws Exception {
-        mockMvc.perform(get("/"))
+        String url = "/";
+        String viewName = "home/index";
+
+        mockMvc.perform(get(url))
                 .andExpect(status().isOk())
-                .andExpect(view().name("home/index"));
+                .andExpect(view().name(viewName));
     }
 
 }

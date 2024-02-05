@@ -22,16 +22,22 @@ public class UserControllerTest {
 
     @Test
     public void testRegisterPage() throws Exception {
-        mockMvc.perform(get("/register"))
+        String url = "/register";
+        String viewName = "user/register";
+
+        mockMvc.perform(get(url))
                 .andExpect(status().isOk())
-                .andExpect(view().name("user/register"));
+                .andExpect(view().name(viewName));
     }
 
     @Test
     public void testLoginPage() throws Exception {
-        mockMvc.perform(get("/login"))
-                .andExpect(status().is(200))
-                .andExpect(view().name("user/login"));
+        String url = "/login";
+        String viewName = "user/login";
+
+        mockMvc.perform(get(url))
+                .andExpect(status().isOk())
+                .andExpect(view().name(viewName));
     }
 
 }

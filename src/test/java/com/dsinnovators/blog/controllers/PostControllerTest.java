@@ -26,25 +26,37 @@ public class PostControllerTest {
     @MockBean
     private UserService userService;
 
+    private final String user = "user";
+    private final String email = "salaam.mbstu@gmail.com";
+
     @Test
     public void testPostPage() throws Exception {
-        mockMvc.perform(get("/posts").sessionAttr("user", "salaam.mbstu@gmail.com"))
+        String url = "/posts";
+        String viewName = "post/posts";
+
+        mockMvc.perform(get(url).sessionAttr(user, email))
                 .andExpect(status().isOk())
-                .andExpect(view().name("post/posts"));
+                .andExpect(view().name(viewName));
     }
 
     @Test
     public void testPostAllPage() throws Exception {
-        mockMvc.perform(get("/post/all").sessionAttr("user", "salaam.mbstu@gmail.com"))
+        String url = "/post/all";
+        String viewName = "post/index";
+
+        mockMvc.perform(get(url).sessionAttr(user, email))
                 .andExpect(status().isOk())
-                .andExpect(view().name("post/index"));
+                .andExpect(view().name(viewName));
     }
 
     @Test
     public void testPostCreatePage() throws Exception {
-        mockMvc.perform(get("/post/create").sessionAttr("user", "salaam.mbstu@gmail.com"))
+        String url = "/post/create";
+        String viewName = "post/create";
+
+        mockMvc.perform(get(url).sessionAttr(user, email))
                 .andExpect(status().isOk())
-                .andExpect(view().name("post/create"));
+                .andExpect(view().name(viewName));
     }
 
 }
