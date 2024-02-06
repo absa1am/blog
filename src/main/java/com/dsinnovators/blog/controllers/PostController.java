@@ -1,5 +1,6 @@
 package com.dsinnovators.blog.controllers;
 
+import com.dsinnovators.blog.dto.PostDTO;
 import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.models.Post;
 import com.dsinnovators.blog.models.User;
@@ -11,10 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -79,7 +77,7 @@ public class PostController {
     }
 
     @PostMapping("/post/create")
-    public String create(@Valid @ModelAttribute Post post, Errors errors, Model model) {
+    public String create(@Valid @ModelAttribute PostDTO post, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("categories", categoryService.getAll());
 

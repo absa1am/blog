@@ -14,7 +14,7 @@
         <main class="container">
             <div class="p-5 rounded">
                 <h1>Create Post</h1>
-                <form th:action="@{/post/create}" th:object="${post}" th:method="post">
+                <form th:action="@{/post/create}" th:object="${post}" th:method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="title" class="form-label">Post Title</label>
                         <input type="text" th:field="*{title}" class="form-control" id="title">
