@@ -77,7 +77,7 @@ public class PostController {
     }
 
     @PostMapping("/post/create")
-    public String create(@Valid @ModelAttribute PostDTO post, Errors errors, Model model) {
+    public String create(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("categories", categoryService.getAll());
 
