@@ -27,7 +27,7 @@ public class CategoryController {
             return "redirect:/login";
         }
 
-        List<Category> categories = categoryService.getAll();
+        List<Category> categories = categoryService.getCategories();
 
         model.addAttribute("categories", categories);
 
@@ -51,7 +51,7 @@ public class CategoryController {
             return "category/create";
         }
 
-        categoryService.save(category);
+        categoryService.saveCategory(category);
 
         return "redirect:/categories";
     }
@@ -62,11 +62,13 @@ public class CategoryController {
             return "redirect:/login";
         }
 
-        Optional<Category> category = categoryService.findById(id);
+        Optional<Category> category = categoryService.getCategoryById(id);
 
-        if (category.isPresent()) {
-            model.addAttribute("category", category.get());
+        if (category.isEmpty()) {
+            return "error/index";
         }
+
+        model.addAttribute("category", category.get());
 
         return "category/update";
     }
@@ -77,14 +79,14 @@ public class CategoryController {
             return "category/update";
         }
 
-        categoryService.update(category, id);
+        categoryService.updateCategory(category, id);
 
         return "redirect:/categories";
     }
 
     @PostMapping("/category/{id}/delete")
     public String delete(@PathVariable Long id) {
-        categoryService.delete(id);
+        categoryService.deleteCategory(id);
 
         return "redirect:/categories";
     }

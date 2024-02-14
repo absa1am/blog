@@ -68,7 +68,7 @@ public class PostController {
             return "redirect:/login";
         }
 
-        List<Category> categories = categoryService.getAll();
+        List<Category> categories = categoryService.getCategories();
 
         model.addAttribute("post", new Post());
         model.addAttribute("categories", categories);
@@ -79,7 +79,7 @@ public class PostController {
     @PostMapping("/post/create")
     public String create(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model) {
         if (errors.hasErrors()) {
-            model.addAttribute("categories", categoryService.getAll());
+            model.addAttribute("categories", categoryService.getCategories());
 
             return "post/create";
         }
@@ -101,7 +101,7 @@ public class PostController {
         }
 
         Post post = postService.find(id);
-        List<Category> categories = categoryService.getAll();
+        List<Category> categories = categoryService.getCategories();
 
         model.addAttribute("post", post);
         model.addAttribute("categories", categories);
@@ -112,7 +112,7 @@ public class PostController {
     @PostMapping("/post/{id}/update")
     public String update(@Valid @ModelAttribute Post post, Errors errors, Model model, @PathVariable Long id) {
         if (errors.hasErrors()) {
-            model.addAttribute("categories", categoryService.getAll());
+            model.addAttribute("categories", categoryService.getCategories());
 
             return "post/update";
         }
