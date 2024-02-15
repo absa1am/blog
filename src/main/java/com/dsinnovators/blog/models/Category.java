@@ -11,6 +11,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_id_seq")
     @SequenceGenerator(name = "categories_id_seq", sequenceName = "categories_id_seq", allocationSize = 1)
     private Long id;
+    @Column(unique = true)
     @NotBlank(message = "Name can not be empty")
     private String name;
     private String description;

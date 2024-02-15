@@ -2,7 +2,6 @@ package com.dsinnovators.blog.services;
 
 import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.repositories.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,31 +16,31 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category save(Category category) {
+    public Category saveCategory(Category category) {
         return categoryRepository.save(category);
     }
 
-    public Category update(Category category, Long id) {
+    public Category updateCategory(Category category, Long id) {
         Category oldCategory = categoryRepository.findById(id).get();
 
         oldCategory.setId(category.getId());
         oldCategory.setName(category.getName());
         oldCategory.setDescription(category.getDescription());
 
-        return save(oldCategory);
+        return saveCategory(oldCategory);
     }
 
-    public void delete(Long id) {
+    public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id).get();
 
         categoryRepository.delete(category);
     }
 
-    public List<Category> getAll() {
+    public List<Category> getCategories() {
         return categoryRepository.findAll();
     }
 
-    public Optional<Category> findById(Long id) {
+    public Optional<Category> getCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
 

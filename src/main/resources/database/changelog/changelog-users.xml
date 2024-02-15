@@ -15,4 +15,8 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="4" author="Md. Abdus Salam">
+        <addUniqueConstraint tableName="users" columnNames="email"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -15,6 +15,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PostController {
@@ -33,7 +34,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public String index(Model model) {
-        List<Post> posts = postService.getAll();
+        List<Post> posts = postService.getPosts();
 
         model.addAttribute("posts", posts);
 
@@ -46,7 +47,7 @@ public class PostController {
             return "redirect:/login";
         }
 
-        List<Post> posts = postService.getAll();
+        List<Post> posts = postService.getPosts();
 
         model.addAttribute("posts", posts);
 
@@ -55,9 +56,13 @@ public class PostController {
 
     @GetMapping("/post/{id}/view")
     public String view(Model model, @PathVariable Long id) {
-        Post post = postService.find(id);
+        Optional<Post> post = postService.getPost(id);
 
-        model.addAttribute("post", post);
+        if (!post.isPresent()) {
+            return "error/index";
+        }
+
+        model.addAttribute("post", post.get());
 
         return "post/view";
     }
@@ -68,7 +73,7 @@ public class PostController {
             return "redirect:/login";
         }
 
-        List<Category> categories = categoryService.getAll();
+        List<Category> categories = categoryService.getCategories();
 
         model.addAttribute("post", new Post());
         model.addAttribute("categories", categories);
@@ -79,7 +84,7 @@ public class PostController {
     @PostMapping("/post/create")
     public String create(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model) {
         if (errors.hasErrors()) {
-            model.addAttribute("categories", categoryService.getAll());
+            model.addAttribute("categories", categoryService.getCategories());
 
             return "post/create";
         }
@@ -89,7 +94,7 @@ public class PostController {
         }
 
         User user = userService.findByEmail(httpSession.getAttribute("user").toString());
-        postService.save(post, user);
+        postService.savePost(post, user);
 
         return "redirect:/posts";
     }
@@ -100,10 +105,14 @@ public class PostController {
             return "redirect:/login";
         }
 
-        Post post = postService.find(id);
-        List<Category> categories = categoryService.getAll();
+        Optional<Post> post = postService.getPost(id);
+        List<Category> categories = categoryService.getCategories();
 
-        model.addAttribute("post", post);
+        if (!post.isPresent()) {
+            return "error/index";
+        }
+
+        model.addAttribute("post", post.get());
         model.addAttribute("categories", categories);
 
         return "post/update";
@@ -112,19 +121,19 @@ public class PostController {
     @PostMapping("/post/{id}/update")
     public String update(@Valid @ModelAttribute Post post, Errors errors, Model model, @PathVariable Long id) {
         if (errors.hasErrors()) {
-            model.addAttribute("categories", categoryService.getAll());
+            model.addAttribute("categories", categoryService.getCategories());
 
             return "post/update";
         }
 
-        postService.update(post, id);
+        postService.updatePost(post, id);
 
         return "redirect:/posts";
     }
 
     @PostMapping("/post/{id}/delete")
     public String delete(@PathVariable Long id) {
-        postService.delete(id);
+        postService.deletePost(id);
 
         return "redirect:/posts";
     }

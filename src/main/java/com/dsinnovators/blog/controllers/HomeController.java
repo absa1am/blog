@@ -19,7 +19,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Post> posts = postService.getAll();
+        List<Post> posts = postService.getPosts();
 
         model.addAttribute("posts", posts);
 
