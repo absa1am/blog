@@ -1,11 +1,16 @@
 package com.dsinnovators.blog.controllers;
 
+import com.dsinnovators.blog.dto.LoginDTO;
 import com.dsinnovators.blog.models.User;
 import com.dsinnovators.blog.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private UserService userService;
     private HttpSession httpSession;
@@ -34,12 +41,19 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute User user, Errors errors) {
+    public String register(@Valid @ModelAttribute User user, BindingResult errors) {
         if (errors.hasErrors()) {
             return "user/register";
         }
 
-        userService.saveUser(user);
+        try {
+            userService.saveUser(user);
+        } catch (DataIntegrityViolationException e) {
+            errors.rejectValue("email", "error.email", "User account already exists");
+            logger.error(e.getMessage());
+
+            return "user/register";
+        }
 
         httpSession.setAttribute("user", user.getEmail());
 
@@ -58,7 +72,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute User user, Errors errors) {
+    public String login(@Valid @ModelAttribute LoginDTO user, Errors errors) {
         if (errors.hasErrors()) {
             return "user/login";
         }

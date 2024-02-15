@@ -29,15 +29,15 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public List<Post> getAll() {
+    public List<Post> getPosts() {
         return postRepository.findAll();
     }
 
-    public Post find(Long id) {
-        return postRepository.findById(id).get();
+    public Optional<Post> getPost(Long id) {
+        return postRepository.findById(id);
     }
 
-    public Post save(PostDTO postDTO, User user) {
+    public Post savePost(PostDTO postDTO, User user) {
         MultipartFile image = postDTO.getImage();
         String imageName = image.getOriginalFilename();
 
@@ -60,7 +60,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post update(Post post, Long id) {
+    public Post updatePost(Post post, Long id) {
         Post oldPost = postRepository.findById(id).get();
 
         oldPost.setId(post.getId());
@@ -71,7 +71,7 @@ public class PostService {
         return postRepository.save(oldPost);
     }
 
-    public void delete(Long id) {
+    public void deletePost(Long id) {
         Optional<Post> post = postRepository.findById(id);
 
         if (post.isPresent()) {

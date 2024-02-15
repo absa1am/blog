@@ -64,7 +64,7 @@ public class CategoryController {
 
         Optional<Category> category = categoryService.getCategoryById(id);
 
-        if (category.isEmpty()) {
+        if (!category.isPresent()) {
             return "error/index";
         }
 
