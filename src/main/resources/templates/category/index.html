@@ -45,7 +45,7 @@
                                 <a class="page-link" th:href="@{/categories(page=${page})}" th:text="${page + 1}"></a>
                             </li>
                         </th:block>
-                        <li class="page-item" th:classappend="${currentPage >= totalPages}? 'disabled'">
+                        <li class="page-item" th:classappend="@{${currentPage} >= ${categories.totalPages - 1}}? 'disabled'">
                             <a class="page-link" th:href="@{/categories(page=${currentPage + 1})}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
