@@ -119,7 +119,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/update")
-    public String update(@Valid @ModelAttribute Post post, Errors errors, Model model, @PathVariable Long id) {
+    public String update(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model, @PathVariable Long id) {
         if (errors.hasErrors()) {
             model.addAttribute("categories", categoryService.getCategories());
 

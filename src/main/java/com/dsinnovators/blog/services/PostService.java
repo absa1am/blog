@@ -60,13 +60,25 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post updatePost(Post post, Long id) {
+    public Post updatePost(PostDTO postDTO, Long id) {
         Post oldPost = postRepository.findById(id).get();
 
-        oldPost.setId(post.getId());
-        oldPost.setTitle(post.getTitle());
-        oldPost.setDescription(post.getDescription());
-        oldPost.setCategory(post.getCategory());
+        MultipartFile image = postDTO.getImage();
+        String imageName = image.getOriginalFilename();
+
+        if (image != null) {
+            try {
+                image.transferTo(new File(uploadLocation, imageName));
+            } catch (IOException | RuntimeException e) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        oldPost.setId(id);
+        oldPost.setTitle(postDTO.getTitle());
+        oldPost.setDescription(postDTO.getDescription());
+        oldPost.setImage(imageName);
+        oldPost.setCategory(postDTO.getCategory());
 
         return postRepository.save(oldPost);
     }
