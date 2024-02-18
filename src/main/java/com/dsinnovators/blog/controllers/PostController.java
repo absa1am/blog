@@ -42,14 +42,17 @@ public class PostController {
     }
 
     @GetMapping("/post/all")
-    public String posts(Model model) {
+    public String posts(Model model, @RequestParam(defaultValue = "0") int page) {
         if (httpSession.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
-        List<Post> posts = postService.getPosts();
+        if (page < 0) {
+            return "error/index";
+        }
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("posts", postService.getPosts(page));
 
         return "post/index";
     }
