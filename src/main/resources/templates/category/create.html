@@ -10,7 +10,7 @@
         <div th:replace="~{layouts/navbar :: #nav}"></div>
 
         <main class="container">
-            <div class="bg-body-tertiary p-5 rounded">
+            <div class="p-5 rounded">
                 <h1>Create Category</h1>
                 <form th:action="@{/category/create}" th:object="${category}" th:method="post">
                     <div class="mb-3">

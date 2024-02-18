@@ -22,7 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="category : ${categories}">
+                        <tr th:each="category : ${categories.content}">
                             <td th:text="${category.id}"></td>
                             <td th:text="${category.name}"></td>
                             <td th:text="${category.description}"></td>
@@ -33,6 +33,25 @@
                         </tr>
                     </tbody>
                 </table>
+                <div aria-label="pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage <= 0}? 'disabled'">
+                            <a class="page-link" th:href="@{/categories(page=${currentPage - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <th:block th:each="page : ${#numbers.sequence(0, categories.totalPages - 1)}">
+                            <li class="page-item" th:classappend="${currentPage == page}? 'active'">
+                                <a class="page-link" th:href="@{/categories(page=${page})}" th:text="${page + 1}"></a>
+                            </li>
+                        </th:block>
+                        <li class="page-item" th:classappend="${currentPage >= totalPages}? 'disabled'">
+                            <a class="page-link" th:href="@{/categories(page=${currentPage + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </main>
 
