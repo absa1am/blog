@@ -25,8 +25,8 @@ public class PostService {
     @Value("${spring.file.upload-location}")
     private String uploadLocation;
     private PostRepository postRepository;
-    private final Logger logger = LoggerFactory.getLogger(PostService.class);
-    private final int defaultPageSize = 4;
+    private final Logger LOGGER = LoggerFactory.getLogger(PostService.class);
+    private final int DEFAULT_PAGE_SIZE = 4;
 
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -37,7 +37,7 @@ public class PostService {
     }
 
     public Page<Post> getPosts(int page) {
-        return postRepository.findAll(PageRequest.of(page, defaultPageSize));
+        return postRepository.findAll(PageRequest.of(page, DEFAULT_PAGE_SIZE));
     }
 
     public Optional<Post> getPost(Long id) {
@@ -52,7 +52,7 @@ public class PostService {
             try {
                 image.transferTo(new File(uploadLocation, imageName));
             } catch (IOException | RuntimeException e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
 
@@ -77,7 +77,7 @@ public class PostService {
             try {
                 image.transferTo(new File(uploadLocation, imageName));
             } catch (IOException | RuntimeException e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
 

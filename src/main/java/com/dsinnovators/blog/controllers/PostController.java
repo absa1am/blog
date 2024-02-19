@@ -20,7 +20,7 @@ import java.util.Optional;
 @Controller
 public class PostController {
 
-    private final String defaultPageNo = "0";
+    private final String DEFAULT_PAGE_NO = "0";
 
     private PostService postService;
     private CategoryService categoryService;
@@ -35,7 +35,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public String index(Model model, @RequestParam(defaultValue = defaultPageNo) int page) {
+    public String index(Model model, @RequestParam(defaultValue = DEFAULT_PAGE_NO) int page) {
         if (page < 0) {
             return "error/index";
         }
@@ -47,7 +47,7 @@ public class PostController {
     }
 
     @GetMapping("/post/all")
-    public String posts(Model model, @RequestParam(defaultValue = defaultPageNo) int page) {
+    public String posts(Model model, @RequestParam(defaultValue = DEFAULT_PAGE_NO) int page) {
         if (httpSession.getAttribute("user") == null) {
             return "redirect:/login";
         }

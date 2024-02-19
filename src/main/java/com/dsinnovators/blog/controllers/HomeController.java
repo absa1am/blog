@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HomeController {
 
-    private final String defaultPageNo = "0";
+    private final String DEFAULT_PAGE_NO = "0";
 
     private PostService postService;
 
@@ -18,7 +18,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index(Model model, @RequestParam(defaultValue = defaultPageNo) int page) {
+    public String index(Model model, @RequestParam(defaultValue = DEFAULT_PAGE_NO) int page) {
         if (page < 0) {
             return "error/index";
         }
