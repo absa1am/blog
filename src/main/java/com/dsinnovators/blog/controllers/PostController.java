@@ -33,10 +33,13 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public String index(Model model) {
-        List<Post> posts = postService.getPosts();
+    public String index(Model model, @RequestParam(defaultValue = "0") int page) {
+        if (page < 0) {
+            return "error/index";
+        }
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("posts", postService.getPosts(page));
 
         return "post/posts";
     }

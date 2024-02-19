@@ -11,7 +11,7 @@
 
         <main class="container">
             <div class="p-5 rounded">
-                <div th:each="post : ${posts}" class="list-group">
+                <div th:each="post : ${posts.content}" class="list-group">
                     <div class="card border-0 mb-1">
                         <div class="card-body">
                             <h4 class="card-title text-capitalize" th:text="${post.title}"></h4>
@@ -19,6 +19,16 @@
                             <p class="card-text" th:text="${post.description}"></p>
                             <a th:href="@{/post/{id}/view(id=${post.id})}" class="btn btn-dark">Read</a>
                         </div>
+                    </div>
+                </div>
+                <div aria-label="pagination">
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-dark m-2" th:classappend="@{${currentPage} >= ${posts.totalPages - 1}}? 'disabled'" th:href="@{/(page=${currentPage + 1})}" aria-label="Next">
+                            <span aria-hidden="true">Newer</span>
+                        </a>
+                        <a class="btn btn-dark m-2" th:classappend="${currentPage <= 0}? 'disabled'" th:href="@{/(page=${currentPage - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">Older</span>
+                        </a>
                     </div>
                 </div>
             </div>

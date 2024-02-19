@@ -1,12 +1,10 @@
 package com.dsinnovators.blog.controllers;
 
-import com.dsinnovators.blog.models.Post;
 import com.dsinnovators.blog.services.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -18,10 +16,13 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        List<Post> posts = postService.getPosts();
+    public String index(Model model, @RequestParam(defaultValue = "0") int page) {
+        if (page < 0) {
+            return "error/index";
+        }
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("posts", postService.getPosts(page));
 
         return "home/index";
     }
