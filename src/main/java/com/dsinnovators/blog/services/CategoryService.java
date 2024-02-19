@@ -12,6 +12,8 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
+    private final int defaultPageSize = 4;
+
     private CategoryRepository categoryRepository;
 
     public CategoryService(CategoryRepository categoryRepository) {
@@ -43,7 +45,7 @@ public class CategoryService {
     }
 
     public Page<Category> getCategories(int page) {
-        return categoryRepository.findAll(PageRequest.of(page, 4));
+        return categoryRepository.findAll(PageRequest.of(page, defaultPageSize));
     }
 
     public Optional<Category> getCategoryById(Long id) {

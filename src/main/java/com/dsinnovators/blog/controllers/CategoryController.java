@@ -14,6 +14,8 @@ import java.util.Optional;
 @Controller
 public class CategoryController {
 
+    private final String defaultPageNo = "0";
+
     private CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
@@ -21,7 +23,7 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public String index(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page) {
+    public String index(Model model, HttpSession session, @RequestParam(defaultValue = defaultPageNo) int page) {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         }

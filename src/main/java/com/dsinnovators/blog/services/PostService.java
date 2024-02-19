@@ -26,6 +26,7 @@ public class PostService {
     private String uploadLocation;
     private PostRepository postRepository;
     private final Logger logger = LoggerFactory.getLogger(PostService.class);
+    private final int defaultPageSize = 4;
 
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -36,7 +37,7 @@ public class PostService {
     }
 
     public Page<Post> getPosts(int page) {
-        return postRepository.findAll(PageRequest.of(page, 4));
+        return postRepository.findAll(PageRequest.of(page, defaultPageSize));
     }
 
     public Optional<Post> getPost(Long id) {
