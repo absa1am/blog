@@ -2,6 +2,8 @@ package com.dsinnovators.blog.services;
 
 import com.dsinnovators.blog.models.Category;
 import com.dsinnovators.blog.repositories.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.Optional;
 
 @Service
 public class CategoryService {
+
+    private final int DEFAULT_PAGE_SIZE = 4;
 
     private CategoryRepository categoryRepository;
 
@@ -38,6 +42,10 @@ public class CategoryService {
 
     public List<Category> getCategories() {
         return categoryRepository.findAll();
+    }
+
+    public Page<Category> getCategories(int page) {
+        return categoryRepository.findAll(PageRequest.of(page, DEFAULT_PAGE_SIZE));
     }
 
     public Optional<Category> getCategoryById(Long id) {

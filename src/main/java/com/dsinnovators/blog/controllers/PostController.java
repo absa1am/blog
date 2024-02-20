@@ -20,6 +20,8 @@ import java.util.Optional;
 @Controller
 public class PostController {
 
+    private final String DEFAULT_PAGE_NO = "0";
+
     private PostService postService;
     private CategoryService categoryService;
     private UserService userService;
@@ -33,23 +35,29 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public String index(Model model) {
-        List<Post> posts = postService.getPosts();
+    public String index(Model model, @RequestParam(defaultValue = DEFAULT_PAGE_NO) int page) {
+        if (page < 0) {
+            return "error/index";
+        }
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("posts", postService.getPosts(page));
 
         return "post/posts";
     }
 
     @GetMapping("/post/all")
-    public String posts(Model model) {
+    public String posts(Model model, @RequestParam(defaultValue = DEFAULT_PAGE_NO) int page) {
         if (httpSession.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
-        List<Post> posts = postService.getPosts();
+        if (page < 0) {
+            return "error/index";
+        }
 
-        model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("posts", postService.getPosts(page));
 
         return "post/index";
     }
@@ -119,7 +127,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/update")
-    public String update(@Valid @ModelAttribute Post post, Errors errors, Model model, @PathVariable Long id) {
+    public String update(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model, @PathVariable Long id) {
         if (errors.hasErrors()) {
             model.addAttribute("categories", categoryService.getCategories());
 

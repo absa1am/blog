@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +25,8 @@ public class PostService {
     @Value("${spring.file.upload-location}")
     private String uploadLocation;
     private PostRepository postRepository;
-    private final Logger logger = LoggerFactory.getLogger(PostService.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(PostService.class);
+    private final int DEFAULT_PAGE_SIZE = 4;
 
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -31,6 +34,10 @@ public class PostService {
 
     public List<Post> getPosts() {
         return postRepository.findAll();
+    }
+
+    public Page<Post> getPosts(int page) {
+        return postRepository.findAll(PageRequest.of(page, DEFAULT_PAGE_SIZE));
     }
 
     public Optional<Post> getPost(Long id) {
@@ -45,7 +52,7 @@ public class PostService {
             try {
                 image.transferTo(new File(uploadLocation, imageName));
             } catch (IOException | RuntimeException e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
 
@@ -60,13 +67,25 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post updatePost(Post post, Long id) {
+    public Post updatePost(PostDTO postDTO, Long id) {
         Post oldPost = postRepository.findById(id).get();
 
-        oldPost.setId(post.getId());
-        oldPost.setTitle(post.getTitle());
-        oldPost.setDescription(post.getDescription());
-        oldPost.setCategory(post.getCategory());
+        MultipartFile image = postDTO.getImage();
+        String imageName = image.getOriginalFilename();
+
+        if (image != null) {
+            try {
+                image.transferTo(new File(uploadLocation, imageName));
+            } catch (IOException | RuntimeException e) {
+                LOGGER.error(e.getMessage());
+            }
+        }
+
+        oldPost.setId(id);
+        oldPost.setTitle(postDTO.getTitle());
+        oldPost.setDescription(postDTO.getDescription());
+        oldPost.setImage(imageName);
+        oldPost.setCategory(postDTO.getCategory());
 
         return postRepository.save(oldPost);
     }

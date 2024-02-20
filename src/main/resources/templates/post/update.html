@@ -3,18 +3,16 @@
     <head>
         <meta charset="UTF-8">
         <title>Update Post - Blog</title>
-        <link rel="stylesheet" th:href="@{/assets/css/styles.css}">
-        <link rel="canonical" th:href="@{https://getbootstrap.com/docs/5.3/examples/navbar-static/}">
-        <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/@docsearch/css@3}">
-        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+
+        <div th:replace="~{layouts/styles :: #styles}"></div>
     </head>
     <body>
-        <div th:replace="~{layouts/navbar :: nav}"></div>
+        <div th:replace="~{layouts/navbar :: #nav}"></div>
 
         <main class="container">
             <div class="p-5 rounded">
                 <h1>Update Post</h1>
-                <form th:action="@{/post/{id}/update(id=${post.id})}" th:object="${post}" th:method="post">
+                <form th:action="@{/post/{id}/update(id=${post.id})}" th:object="${post}" th:method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="title" class="form-label">Post Title</label>
                         <input type="text" th:field="*{title}" class="form-control" id="title">

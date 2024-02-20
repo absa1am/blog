@@ -3,14 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Posts - Blog</title>
-        <link rel="stylesheet" th:href="@{/assets/css/styles.css}">
-        <link rel="canonical" th:href="@{https://getbootstrap.com/docs/5.3/examples/navbar-static/}">
-        <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/@docsearch/css@3}">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-        <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+
+        <div th:replace="~{layouts/styles :: #styles}"></div>
     </head>
     <body>
-        <div th:replace="~{layouts/navbar :: nav}"></div>
+        <div th:replace="~{layouts/navbar :: #nav}"></div>
 
         <main class="container">
             <div class="p-5 rounded">
@@ -25,7 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="post : ${posts}">
+                        <tr th:each="post : ${posts.content}">
                             <td th:text="${post.id}"></td>
                             <td th:text="${post.title}"></td>
                             <td th:text="${post.category.name}"></td>
@@ -37,6 +34,25 @@
                         </tr>
                     </tbody>
                 </table>
+                <div aria-label="pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage <= 0}? 'disabled'">
+                            <a class="page-link" th:href="@{/post/all(page=${currentPage - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <th:block th:each="page : ${#numbers.sequence(0, posts.totalPages - 1)}">
+                            <li class="page-item" th:classappend="${currentPage == page}? 'active'">
+                                <a class="page-link" th:href="@{/post/all(page=${page})}" th:text="${page + 1}"></a>
+                            </li>
+                        </th:block>
+                        <li class="page-item" th:classappend="@{${currentPage} >= ${posts.totalPages - 1}}? 'disabled'">
+                            <a class="page-link" th:href="@{/post/all(page=${currentPage + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </main>
 

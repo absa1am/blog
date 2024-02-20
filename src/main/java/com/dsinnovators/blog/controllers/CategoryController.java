@@ -9,11 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class CategoryController {
+
+    private final String DEFAULT_PAGE_NO = "0";
 
     private CategoryService categoryService;
 
@@ -22,14 +23,17 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public String index(Model model, HttpSession session) {
+    public String index(Model model, HttpSession session, @RequestParam(defaultValue = DEFAULT_PAGE_NO) int page) {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
-        List<Category> categories = categoryService.getCategories();
+        if (page < 0) {
+            return "error/index";
+        }
 
-        model.addAttribute("categories", categories);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("categories", categoryService.getCategories(page));
 
         return "category/index";
     }
