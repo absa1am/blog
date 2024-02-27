@@ -1,5 +1,6 @@
 package com.dsinnovators.blog.services;
 
+import com.dsinnovators.blog.dto.LoginDTO;
 import com.dsinnovators.blog.models.User;
 import com.dsinnovators.blog.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -19,6 +20,10 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public boolean isCredentialMatched(LoginDTO user, User existingUser) {
+        return (existingUser != null && existingUser.getPassword().equals(user.getPassword()));
     }
 
 }

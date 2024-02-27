@@ -11,7 +11,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +20,8 @@ public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private UserService userService;
-    private HttpSession httpSession;
+    private final UserService userService;
+    private final HttpSession httpSession;
 
     public UserController(UserService userService, HttpSession httpSession) {
         this.userService = userService;
@@ -41,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute User user, BindingResult errors) {
+    public String register(@Valid @ModelAttribute("user") User user, BindingResult errors) {
         if (errors.hasErrors()) {
             return "user/register";
         }
@@ -72,20 +71,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginDTO user, Errors errors) {
+    public String login(@Valid @ModelAttribute("user") LoginDTO user, BindingResult errors) {
         if (errors.hasErrors()) {
             return "user/login";
         }
 
         User existingUser = userService.findByEmail(user.getEmail());
 
-        if (existingUser != null && existingUser.getPassword().equals(user.getPassword())) {
+        if (userService.isCredentialMatched(user, existingUser)) {
             httpSession.setAttribute("user", user.getEmail());
 
             return "redirect:/";
         }
 
-        return "redirect:/login";
+        errors.rejectValue("email", "error.email", "The email or password is wrong");
+
+        return "user/login";
     }
 
     @PostMapping("/logout")
