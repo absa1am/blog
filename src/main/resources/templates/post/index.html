@@ -15,15 +15,15 @@
                 <table id="categories" class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
+                            <th>SL.</th>
                             <th>Title</th>
                             <th>Category</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="post : ${posts.content}">
-                            <td th:text="${post.id}"></td>
+                        <tr th:each="post, serial : ${posts.content}">
+                            <td th:text="${serial.index + 1}"></td>
                             <td th:text="${post.title}"></td>
                             <td th:text="${post.category.name}"></td>
                             <td>
@@ -35,7 +35,7 @@
                     </tbody>
                 </table>
                 <div aria-label="pagination">
-                    <ul class="pagination justify-content-center">
+                    <ul th:if="${not posts.isEmpty}" class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${currentPage <= 0}? 'disabled'">
                             <a class="page-link" th:href="@{/post/all(page=${currentPage - 1})}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
@@ -52,6 +52,7 @@
                             </a>
                         </li>
                     </ul>
+                    <div th:unless="${not posts.isEmpty}" class="text-center">No data available</div>
                 </div>
             </div>
         </main>
