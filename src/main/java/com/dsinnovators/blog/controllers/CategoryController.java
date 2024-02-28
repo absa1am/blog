@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class CategoryController {
 
     private final String DEFAULT_PAGE_NO = "0";
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -50,12 +51,14 @@ public class CategoryController {
     }
 
     @PostMapping("/category/create")
-    public String create(@Valid @ModelAttribute Category category, Errors errors) {
+    public String create(@Valid @ModelAttribute Category category, Errors errors, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             return "category/create";
         }
 
         categoryService.saveCategory(category);
+
+        redirectAttributes.addFlashAttribute("message", "Category created successfully!");
 
         return "redirect:/categories";
     }
@@ -78,12 +81,14 @@ public class CategoryController {
     }
 
     @PostMapping("/category/{id}/update")
-    public String update(@PathVariable Long id, @Valid @ModelAttribute Category category, Errors errors) {
+    public String update(@PathVariable Long id, @Valid @ModelAttribute Category category, Errors errors, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             return "category/update";
         }
 
         categoryService.updateCategory(category, id);
+
+        redirectAttributes.addFlashAttribute("message", "Category updated successfully!");
 
         return "redirect:/categories";
     }
