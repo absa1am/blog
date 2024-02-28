@@ -2,7 +2,7 @@ function deleteTableRow(data) {
     const trTag = data.parentNode.parentNode;
     const route = data.getAttribute('data-route-param');
     const id = data.getAttribute('data-row-id');
-    const url = "/" + route + "/" + id + "/delete";
+    const url = `/${route}/${id}/delete`;
 
     let xmlHttpRequest = new XMLHttpRequest();
 

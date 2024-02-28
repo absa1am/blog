@@ -11,9 +11,10 @@
 
         <main class="container">
             <div class="p-5 rounded">
-                <h1 th:text="${post.title}"></h1>
+                <h2 th:text="${post.title}"></h2>
+                <h6 th:text="|Author: ${post.user.name}, Last updated: ${#temporals.format(post.updatedAt, 'dd-MM-yyyy')}|" class="mb-3 text-secondary"></h6>
                 <div class="clearfix">
-                    <img th:src="@{'/storage/' + ${post.image}}" class="col-md-6 float-md-end mb-3 ms-md-3 img-size" alt="Post Image">
+                    <img th:if="${not post.image.isEmpty}" th:src="@{'/storage/' + ${post.image}}" class="col-md-6 float-md-end mb-3 ms-md-3 img-size" alt="Post Image">
 
                     <p th:text="${post.description}"></p>
                 </div>
