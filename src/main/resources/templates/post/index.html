@@ -24,7 +24,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="post, serial : ${posts.content}">
-                            <td th:text="${serial.index + 1}"></td>
+                            <td th:text="${serial.index + 1} + ${currentPage * 4}"></td>
                             <td th:text="${post.title}"></td>
                             <td th:text="${post.category.name}"></td>
                             <td>
