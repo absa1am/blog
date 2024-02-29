@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @PropertySource("classpath:application.properties")
@@ -48,7 +49,7 @@ public class PostService {
     public Post savePost(PostDTO postDTO, User user) {
         LocalDateTime currentTimestamp = LocalDateTime.now();
         MultipartFile image = postDTO.getImage();
-        String imageName = image.getOriginalFilename();
+        String imageName = generateRandomFileName();
 
         if (image != null) {
             try {
@@ -76,7 +77,7 @@ public class PostService {
         Post oldPost = postRepository.findById(id).get();
 
         MultipartFile image = postDTO.getImage();
-        String imageName = image.getOriginalFilename();
+        String imageName = generateRandomFileName();
 
         if (image != null) {
             try {
@@ -105,6 +106,10 @@ public class PostService {
         }
 
         postRepository.save(post.get());
+    }
+
+    private String generateRandomFileName() {
+        return LocalDateTime.now().toString() + "-" + UUID.randomUUID().toString();
     }
 
 }
