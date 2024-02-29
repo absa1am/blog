@@ -51,19 +51,13 @@ public class PostService {
         MultipartFile image = postDTO.getImage();
         String imageName = generateRandomFileName();
 
-        if (image != null) {
-            try {
-                image.transferTo(new File(uploadLocation, imageName));
-            } catch (IOException | RuntimeException e) {
-                logger.error(e.getMessage());
-            }
-        }
+        boolean isFileUploaded = uploadFormFile(image, imageName);
 
         Post post = new Post();
 
         post.setTitle(postDTO.getTitle());
         post.setDescription(postDTO.getDescription());
-        post.setImage(imageName);
+        post.setImage(isFileUploaded? imageName:"");
         post.setUser(user);
         post.setCategory(postDTO.getCategory());
         post.setCreatedAt(currentTimestamp);
@@ -79,20 +73,17 @@ public class PostService {
         MultipartFile image = postDTO.getImage();
         String imageName = generateRandomFileName();
 
-        if (image != null) {
-            try {
-                image.transferTo(new File(uploadLocation, imageName));
-            } catch (IOException | RuntimeException e) {
-                logger.error(e.getMessage());
-            }
-        }
+        boolean isFileUploaded = uploadFormFile(image, imageName);
 
         oldPost.setId(id);
         oldPost.setTitle(postDTO.getTitle());
         oldPost.setDescription(postDTO.getDescription());
-        oldPost.setImage(imageName);
         oldPost.setCategory(postDTO.getCategory());
         oldPost.setUpdatedAt(LocalDateTime.now());
+
+        if (isFileUploaded) {
+            oldPost.setImage(imageName);
+        }
 
         return postRepository.save(oldPost);
     }
@@ -110,6 +101,20 @@ public class PostService {
 
     private String generateRandomFileName() {
         return LocalDateTime.now().toString() + "-" + UUID.randomUUID().toString();
+    }
+
+    private boolean uploadFormFile(MultipartFile image, String imageName) {
+        if (!image.isEmpty() || image.getSize() != 0) {
+            try {
+                image.transferTo(new File(uploadLocation, imageName));
+
+                return true;
+            } catch (IOException | RuntimeException e) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        return false;
     }
 
 }
