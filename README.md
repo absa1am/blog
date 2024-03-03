@@ -32,4 +32,5 @@ Personal blog website in Spring Boot
 8. New Post Page: ![image](https://github.com/absa1am/blog/assets/46478558/9293cd7a-cde0-466b-9895-f58be8432388)
 9. Post Update Page: ![image](https://github.com/absa1am/blog/assets/46478558/c71b47c5-8bb6-4186-9fce-1e0250504db0)
 10. Post List Page: ![image](https://github.com/absa1am/blog/assets/46478558/265c7580-cf48-44bc-b140-f7fec0e7fc30)
+11. Error Page: ![image](https://github.com/absa1am/blog/assets/46478558/a9e0c130-c605-4e49-a551-4af19feccddb)
 
