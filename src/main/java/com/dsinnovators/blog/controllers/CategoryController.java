@@ -94,8 +94,10 @@ public class CategoryController {
     }
 
     @PostMapping("/category/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         categoryService.deleteCategory(id);
+
+        redirectAttributes.addFlashAttribute("message", "Category deleted successfully.");
 
         return "redirect:/categories";
     }

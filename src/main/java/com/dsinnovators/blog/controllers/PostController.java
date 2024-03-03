@@ -145,8 +145,10 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         postService.deletePost(id);
+
+        redirectAttributes.addFlashAttribute("message", "Category deleted successfully.");
 
         return "redirect:/posts";
     }
