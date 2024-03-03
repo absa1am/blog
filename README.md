@@ -14,12 +14,12 @@ Personal blog website in Spring Boot
 **Installation Guide**
 1. Clone the repository from https://github.com/absa1am/blog.git  
 3. Change the following configuration as you need:  
-   a. Replace your database name in the spring.datasource.url  
-   b. Replace your database user name in the spring.datasource.username  
-   c. Replace your database user password in the spring.datasource.password  
-   d. Replace your file storage path in the spring.file.upload-location  
-   e. Replace your logger storage path in the logging.file.path  
-   f. Replace your file storage path in the spring.web.resources.static-locations
+   a. Replace your database name in the ***spring.datasource.url***  
+   b. Replace your database user name in the ***spring.datasource.username***  
+   c. Replace your database user password in the ***spring.datasource.password***  
+   d. Replace your file storage path in the ***spring.file.upload-location***  
+   e. Replace your logger storage path in the ***logging.file.path***  
+   f. Replace your file storage path in the ***spring.web.resources.static-locations***
 
 **Features**
 1. Homepage: ![image](https://github.com/absa1am/blog/assets/46478558/8fb733cd-1402-4c5a-9e0c-4c18a1d29f31)
