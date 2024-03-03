@@ -15,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @PropertySource("classpath:application.properties")
@@ -24,8 +26,8 @@ public class PostService {
 
     @Value("${spring.file.upload-location}")
     private String uploadLocation;
-    private PostRepository postRepository;
-    private final Logger LOGGER = LoggerFactory.getLogger(PostService.class);
+    private final PostRepository postRepository;
+    private final Logger logger = LoggerFactory.getLogger(PostService.class);
     private final int DEFAULT_PAGE_SIZE = 4;
 
     public PostService(PostRepository postRepository) {
@@ -33,36 +35,34 @@ public class PostService {
     }
 
     public List<Post> getPosts() {
-        return postRepository.findAll();
+        return postRepository.findAllByIsDeletedIsFalse();
     }
 
     public Page<Post> getPosts(int page) {
-        return postRepository.findAll(PageRequest.of(page, DEFAULT_PAGE_SIZE));
+        return postRepository.findAllByIsDeletedIsFalse(PageRequest.of(page, DEFAULT_PAGE_SIZE));
     }
 
     public Optional<Post> getPost(Long id) {
-        return postRepository.findById(id);
+        return postRepository.findByIdAndIsDeletedIsFalse(id);
     }
 
     public Post savePost(PostDTO postDTO, User user) {
+        LocalDateTime currentTimestamp = LocalDateTime.now();
         MultipartFile image = postDTO.getImage();
-        String imageName = image.getOriginalFilename();
+        String imageName = generateRandomFileName();
 
-        if (image != null) {
-            try {
-                image.transferTo(new File(uploadLocation, imageName));
-            } catch (IOException | RuntimeException e) {
-                LOGGER.error(e.getMessage());
-            }
-        }
+        boolean isFileUploaded = uploadFormFile(image, imageName);
 
         Post post = new Post();
 
         post.setTitle(postDTO.getTitle());
         post.setDescription(postDTO.getDescription());
-        post.setImage(imageName);
+        post.setImage(isFileUploaded? imageName:"");
         post.setUser(user);
         post.setCategory(postDTO.getCategory());
+        post.setCreatedAt(currentTimestamp);
+        post.setUpdatedAt(currentTimestamp);
+        post.setIsDeleted(false);
 
         return postRepository.save(post);
     }
@@ -71,21 +71,19 @@ public class PostService {
         Post oldPost = postRepository.findById(id).get();
 
         MultipartFile image = postDTO.getImage();
-        String imageName = image.getOriginalFilename();
+        String imageName = generateRandomFileName();
 
-        if (image != null) {
-            try {
-                image.transferTo(new File(uploadLocation, imageName));
-            } catch (IOException | RuntimeException e) {
-                LOGGER.error(e.getMessage());
-            }
-        }
+        boolean isFileUploaded = uploadFormFile(image, imageName);
 
         oldPost.setId(id);
         oldPost.setTitle(postDTO.getTitle());
         oldPost.setDescription(postDTO.getDescription());
-        oldPost.setImage(imageName);
         oldPost.setCategory(postDTO.getCategory());
+        oldPost.setUpdatedAt(LocalDateTime.now());
+
+        if (isFileUploaded) {
+            oldPost.setImage(imageName);
+        }
 
         return postRepository.save(oldPost);
     }
@@ -94,8 +92,29 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
 
         if (post.isPresent()) {
-            postRepository.delete(post.get());
+            post.get().setUpdatedAt(LocalDateTime.now());
+            post.get().setIsDeleted(true);
         }
+
+        postRepository.save(post.get());
+    }
+
+    private String generateRandomFileName() {
+        return LocalDateTime.now().toString() + "-" + UUID.randomUUID().toString();
+    }
+
+    private boolean uploadFormFile(MultipartFile image, String imageName) {
+        if (!image.isEmpty() || image.getSize() != 0) {
+            try {
+                image.transferTo(new File(uploadLocation, imageName));
+
+                return true;
+            } catch (IOException | RuntimeException e) {
+                logger.error(e.getMessage());
+            }
+        }
+
+        return false;
     }
 
 }

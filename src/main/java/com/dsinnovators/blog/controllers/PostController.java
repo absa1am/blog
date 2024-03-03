@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,10 @@ public class PostController {
 
     private final String DEFAULT_PAGE_NO = "0";
 
-    private PostService postService;
-    private CategoryService categoryService;
-    private UserService userService;
-    private HttpSession httpSession;
+    private final PostService postService;
+    private final CategoryService categoryService;
+    private final UserService userService;
+    private final HttpSession httpSession;
 
     public PostController(PostService postService, CategoryService categoryService, UserService userService, HttpSession httpSession) {
         this.postService = postService;
@@ -90,7 +91,7 @@ public class PostController {
     }
 
     @PostMapping("/post/create")
-    public String create(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model) {
+    public String create(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             model.addAttribute("categories", categoryService.getCategories());
 
@@ -104,7 +105,9 @@ public class PostController {
         User user = userService.findByEmail(httpSession.getAttribute("user").toString());
         postService.savePost(post, user);
 
-        return "redirect:/posts";
+        redirectAttributes.addFlashAttribute("message", "Post created successfully!");
+
+        return "redirect:/post/all";
     }
 
     @GetMapping("/post/{id}/update")
@@ -127,7 +130,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/update")
-    public String update(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model, @PathVariable Long id) {
+    public String update(@Valid @ModelAttribute("post") PostDTO post, Errors errors, Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             model.addAttribute("categories", categoryService.getCategories());
 
@@ -136,12 +139,16 @@ public class PostController {
 
         postService.updatePost(post, id);
 
-        return "redirect:/posts";
+        redirectAttributes.addFlashAttribute("message", "Post updated successfully!");
+
+        return "redirect:/post/all";
     }
 
     @PostMapping("/post/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         postService.deletePost(id);
+
+        redirectAttributes.addFlashAttribute("message", "Category deleted successfully.");
 
         return "redirect:/posts";
     }
