@@ -14,7 +14,7 @@
                 <div th:each="post : ${posts.content}" class="list-group">
                     <div class="card border-0 mb-1">
                         <div class="card-body">
-                            <h2 class="card-title text-capitalize">
+                            <h2 class="card-title post-title text-capitalize">
                                 <a th:href="@{/post/{id}/view(id=${post.id})}" th:text="${post.title}" class="nav-link"></a>
                             </h2>
                             <h6 class="card-subtitle mb-3 text-body-secondary" th:text="|Author: ${post.user.name}, Last updated: ${#temporals.format(post.updatedAt, 'dd-MM-yyyy')}|"></h6>
