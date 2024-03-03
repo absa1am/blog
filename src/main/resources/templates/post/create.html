@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Post - Blog</title>
+
+        <div th:replace="~{layouts/styles :: #styles}"></div>
+    </head>
+    <body>
+        <div th:replace="~{layouts/navbar :: #nav}"></div>
+
+        <main class="container">
+            <div class="p-5 rounded">
+                <h1>Create Post</h1>
+                <form th:action="@{/post/create}" th:object="${post}" th:method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Post Title</label>
+                        <input type="text" th:field="*{title}" class="form-control" id="title">
+                        <div th:if="${#fields.hasErrors('title')}" th:errors="${post.title}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Post Description</label>
+                        <textarea th:field="*{description}" class="form-control" id="description"></textarea>
+                        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="image">Post Image</label>
+                        <input type="file" th:field="*{image}" class="form-control" id="image">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="category">Post Category</label>
+                        <select th:field="*{category}" class="form-select" id="category">
+                            <div th:each="category : ${categories}" >
+                                <option th:value="${category.id}" th:text="${category.name}"></option>
+                            </div>
+                        </select>
+                        <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="text-danger"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>

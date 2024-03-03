@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Error - Blog</title>
+
+        <div th:replace="~{layouts/styles :: #styles}"></div>
+    </head>
+    <body>
+        <div class="mt-xl-5">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h1 class="text-danger">404</h1>
+                <p>Something went wrong!</p>
+                <a th:href="@{/}" class="btn btn-primary">Go Back</a>
+            </div>
+        </div>
+    </body>
+</html>
