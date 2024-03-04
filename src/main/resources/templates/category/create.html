@@ -20,7 +20,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Category Description</label>
-                        <textarea th:field="*{description}" class="form-control" id="description"></textarea>
+                        <textarea th:field="*{description}" class="form-control" rows="10" id="description"></textarea>
                         <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Create</button>
