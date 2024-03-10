@@ -3,14 +3,14 @@ package com.dsinnovators.blog.services;
 import com.dsinnovators.blog.dto.LoginDTO;
 import com.dsinnovators.blog.models.User;
 import com.dsinnovators.blog.repositories.UserRepository;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +19,20 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(UserService.class)
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private UserRepository userRepository;
-    @MockBean
+    @InjectMocks
     private UserService userService;
 
     @ParameterizedTest
     @MethodSource("usersProvider")
     void saveUser(User user) {
-        when(userService.saveUser(user)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
 
-        User savedUser = userService.saveUser(user);
+        var savedUser = userService.saveUser(user);
 
         assertAll("saveUser",
                 () -> assertEquals(user.getId(), savedUser.getId()),
@@ -48,7 +45,7 @@ class UserServiceTest {
     @ParameterizedTest
     @ValueSource(strings = { "salaam.mbstu@gmail.com", "none@example.com" })
     void findByEmail(String email) {
-        when(userService.findByEmail(email)).thenReturn(usersProvider()
+        when(userRepository.findByEmail(email)).thenReturn(usersProvider()
                 .stream()
                 .filter(u -> u.getEmail().equals(email))
                 .toList()
@@ -62,6 +59,7 @@ class UserServiceTest {
     @ParameterizedTest
     @MethodSource("loginDtoAndUserProvider")
     void isCredentialMatched(LoginDTO user, User existingUser) {
+        assertNotNull(existingUser);
         assertEquals(user.getEmail(), existingUser.getEmail());
         assertEquals(user.getPassword(), existingUser.getPassword());
     }
@@ -69,9 +67,6 @@ class UserServiceTest {
     @ParameterizedTest
     @ValueSource(strings = { "123456", "654321" })
     void getHashedPassword(String password) {
-        when(userService.getHashedPassword("123456")).thenReturn("e10adc3949ba59abbe56e057f20f883e");
-        when(userService.getHashedPassword("654321")).thenReturn("c33367701511b4f6020ec61ded352059");
-
         if (password.equals("123456")) {
             assertEquals("e10adc3949ba59abbe56e057f20f883e", userService.getHashedPassword(password));
         } else if (password.equals("654321")) {
