@@ -29,7 +29,28 @@
                             <td th:text="${category.description}"></td>
                             <td>
                                 <a th:href="@{/category/{id}/update(id=${category.id})}" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-                                <a href="#" onclick="deleteTableRow(this)" th:data-route-param="category" th:data-row-id="${category.id}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></a>
+                                <a type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i></a>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmation message</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Go back</button>
+                                                <form id="deleteForm" th:action="@{/category/{id}/delete(id=${category.id})}" method="post">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Yes, delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
