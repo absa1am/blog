@@ -3,13 +3,12 @@ package com.dsinnovators.blog.services;
 import com.dsinnovators.blog.dto.LoginDTO;
 import com.dsinnovators.blog.models.User;
 import com.dsinnovators.blog.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -17,15 +16,19 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
-    @InjectMocks
     private UserService userService;
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        userRepository = mock(UserRepository.class);
+        userService = new UserService(userRepository);
+    }
 
     @ParameterizedTest
     @MethodSource("usersProvider")
@@ -40,6 +43,8 @@ class UserServiceTest {
                 () -> assertEquals(user.getEmail(), savedUser.getEmail()),
                 () -> assertEquals(user.getPassword(), savedUser.getPassword())
         );
+
+        verify(userRepository).save(user);
     }
 
     @ParameterizedTest
@@ -51,26 +56,30 @@ class UserServiceTest {
                 .toList()
                 .get(0));
 
-        User user = userService.findByEmail(email);
+        var user = userService.findByEmail(email);
 
         assertAll("user", () -> assertEquals(email, user.getEmail()));
+
+        verify(userRepository).findByEmail(email);
     }
 
     @ParameterizedTest
     @MethodSource("loginDtoAndUserProvider")
     void isCredentialMatched(LoginDTO user, User existingUser) {
-        assertNotNull(existingUser);
-        assertEquals(user.getEmail(), existingUser.getEmail());
-        assertEquals(user.getPassword(), existingUser.getPassword());
+        var isMatched = userService.isCredentialMatched(user, existingUser);
+
+        assertTrue(isMatched);
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "123456", "654321" })
     void getHashedPassword(String password) {
+        String hashedPassword = userService.getHashedPassword(password);
+
         if (password.equals("123456")) {
-            assertEquals("e10adc3949ba59abbe56e057f20f883e", userService.getHashedPassword(password));
+            assertEquals("e10adc3949ba59abbe56e057f20f883e", hashedPassword);
         } else if (password.equals("654321")) {
-            assertEquals("c33367701511b4f6020ec61ded352059", userService.getHashedPassword(password));
+            assertEquals("c33367701511b4f6020ec61ded352059", hashedPassword);
         }
     }
 
@@ -81,7 +90,7 @@ class UserServiceTest {
         existingUser.setId(1L);
         existingUser.setName("Md. Abdus Salam");
         existingUser.setEmail("salaam.mbstu@gmail.com");
-        existingUser.setPassword("123456");
+        existingUser.setPassword("e10adc3949ba59abbe56e057f20f883e");
 
         user.setEmail("salaam.mbstu@gmail.com");
         user.setPassword("123456");
